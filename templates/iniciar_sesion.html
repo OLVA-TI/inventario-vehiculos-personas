@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<!-- saved from url=(0103)https://www.pythonanywhere.com/user/axelitoto/files/home/axelitoto/mysite/templates/iniciar_sesion.html -->
+<html><link type="text/css" rel="stylesheet" id="dark-mode-custom-link"><link type="text/css" rel="stylesheet" id="dark-mode-general-link"><style lang="en" type="text/css" id="dark-mode-custom-style"></style><style lang="en" type="text/css" id="dark-mode-native-style"></style><style lang="en" type="text/css" id="dark-mode-native-sheet"></style>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="icon" type="image/x-icon" href="static/logoolva.ico">
+    <title>Inicio de Sesión</title>
+    <style>
+        body {
+            background-image: url('https://mir-s3-cdn-cf.behance.net/project_modules/1400_opt_1/c902b785060433.5d703b92ed0d3.jpg'); /* Reemplaza 'url_de_tu_imagen.jpg' con la URL de tu imagen */
+            background-size: cover;
+            background-position: center;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+         form {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 300px;
+            width: 100%;
+            margin-top: 50px; /* Ajusta este valor según sea necesario */
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <form method="post" action="/iniciar_sesion">
+        <label for="id_user">Código de Validación:</label><br>
+        <input type="password" id="id_user" name="id_user"><br><br>
+
+        <label for="usuario">Usuario:</label><br>
+        <input type="text" id="usuario" name="usuario"><br><br>
+
+        <label for="contrasena">Contraseña:</label><br>
+        <input type="password" id="contrasena" name="contrasena"><br><br>
+
+        <input type="submit" value="Iniciar Sesión">
+    </form>
+
+
+
+</body></html>

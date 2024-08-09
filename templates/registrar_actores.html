@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/1f8a9fa6da.js" crossorigin="anonymous"></script>
+    <title>Registro de Vehículo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+         form {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            margin-top: 50px; /* Ajusta este valor según sea necesario */
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        h3 {
+            margin-top: 20px;
+            color: #555;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #666;
+        }
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <form action="/registrar_actores_db" method="post" enctype="multipart/form-data">
+        <h2>REGISTRAR ACTORES</h2>
+        <h3 id="cabecera_vehiculo">VEHÍCULO</h3>
+        <label for="vehiculo_placa">Placa</label>
+        <input id="vehiculo_placa" type="text" name="vehiculo_placa" value="{{vehiculo}}">
+        <label for="vehiculo_sede">Sede de Origen</label>
+        <select id="vehiculo_sede" name="vehiculo_sede">
+            <option>4013</option>
+            <option>4458</option>
+            <option>VES</option>
+            <option>SMP</option>
+            <option>EXTERNO</option>
+        </select>
+        <input type="file" id="foto_vehiculo" name="foto_vehiculo" accept="image/*" required><i class="fa-solid fa-car"></i>
+        <input style="display: none;" type="text" id="flag_v" name="flag_v" value="{{flag_v}}">
+        <input style="display: none;" type="text" id="fv" name="fv" value="{{fv}}">
+
+        <h3 id="cabecera_conductor">CONDUCTOR</h3>
+        <label for="dni_conductor">DNI</label>
+        <input id="dni_conductor" type="text" name="dni_conductor" value="{{dni_conductor}}" required>
+        <label for="nombre_conductor">Nombre Completo</label>
+        <input id="nombre_conductor" type="text" name="nombre_conductor" required>
+        <label for="telefono_conductor">Teléfono</label>
+        <input id="telefono_conductor" type="text" name="telefono_conductor" required placeholder="Ingrese número de teléfono">
+        <input type="file" id="foto_conductor" name="foto_conductor" accept="image/*" required><i class="fa-solid fa-image"></i>
+        <input style="display: none;" type="text" id="flag_cond" name="flag_cond" value="{{flag_cond}}">
+        <input style="display: none;" type="text" id="fc" name="fc" value="{{fc}}">
+
+        <div id="contenedor_ayudante">
+        <h3 id="cabecera_ayudante">AYUDANTE</h3>
+        <label for="dni_ayudante">DNI</label>
+        <input id="dni_ayudante" type="text" name="dni_ayudante" value="{{dni_ayudante}}" required>
+        <label for="nombre_ayudate">Nombre Completo</label>
+        <input id="nombre_ayudate" type="text" name="nombre_ayudate" required>
+        <label for="telefono_ayudante">Teléfono</label>
+        <input id="telefono_ayudante" type="text" name="telefono_ayudante" required placeholder="Ingrese número de teléfono">
+        <input type="file" id="foto_ayudante" name="foto_ayudante" accept="image/*" required><i class="fa-solid fa-image"></i>
+        </div>
+        <input style="display: none;" type="text" id="flag_ayu" name="flag_ayu" value="{{flag_ayu}}">
+        <input style="display: none;" type="text" id="fa" name="fa" value="{{fa}}">
+        <input type="submit" value="Registrar">
+    </form>
+
+
+<script>
+    var r={{registros_actores|tojson}}
+    console.log(r)
+    var flag_vehiculo=document.getElementById('flag_v');
+    var flag_conductor=document.getElementById('flag_cond');
+    var flag_ayudante=document.getElementById('flag_ayu');
+
+    /*console.log(r[0],r[1],r[2])*/
+
+    var cabecera_vehiculo=document.getElementById('cabecera_vehiculo');
+    var vehiculo_placa=document.getElementById('vehiculo_placa');
+    var vehiculo_sede=document.getElementById('vehiculo_sede');
+    var foto_vehiculo=document.getElementById('foto_vehiculo');
+
+    var cabecera_conductor=document.getElementById('cabecera_conductor');
+    var dni_conductor=document.getElementById('dni_conductor');
+    var nombre_conductor=document.getElementById('nombre_conductor');
+    var telefono_conductor=document.getElementById('telefono_conductor');
+    var foto_conductor=document.getElementById('foto_conductor');
+
+    var contenedor_ayudante=document.getElementById('contenedor_ayudante');
+    var cabecera_ayudante=document.getElementById('cabecera_ayudante');
+    var dni_ayudante=document.getElementById('dni_ayudante');
+    var telefono_ayudante=document.getElementById('telefono_ayudante');
+    var nombre_ayudate=document.getElementById('nombre_ayudate');
+    var foto_ayudante=document.getElementById('foto_ayudante');
+
+
+    var vehiculo_externo = "{{tipo_vehiculo}}"; 
+    /*console.log({{fv}})*/
+    if({{fv}}==1) /*No requiere imagen*/
+    {
+        foto_vehiculo.required=false;
+        foto_vehiculo.disabled=true;
+    }
+    else{foto_vehiculo.style.backgroundColor = '#F19C9C';}
+
+    if({{fc}}==1) /*No requiere imagen*/
+    {
+        foto_conductor.required=false;
+        foto_conductor.disabled=true;
+    }
+    else{foto_conductor.style.backgroundColor = '#F19C9C';}
+
+    if({{fa}}==1) /*No requiere imagen*/
+    {
+        foto_ayudante.required=false;
+        foto_ayudante.disabled=true;
+    }
+    else{foto_ayudante.style.backgroundColor = '#F19C9C';}
+
+
+    if(r[0]!=null) /*Datos del vehículo*/
+    {
+    vehiculo_placa.value=r[0][0];
+    vehiculo_placa.readOnly=true;
+    vehiculo_placa.style.backgroundColor = '#d3d3d3';
+    vehiculo_sede.value=r[0][1];
+    vehiculo_sede.disabled=true;
+    vehiculo_sede.style.backgroundColor = '#d3d3d3'; 
+    cabecera_vehiculo.style.backgroundColor='#90D663';
+    }
+    else
+    {
+    cabecera_vehiculo.style.backgroundColor='red';
+    cabecera_vehiculo.style.color='white';
+    }
+
+    if(r[1]!=null) /*Datos del conductor*/
+    {
+    dni_conductor.value=r[1][0];
+    dni_conductor.readOnly=true;
+    dni_conductor.style.backgroundColor = '#d3d3d3';
+    nombre_conductor.value=r[1][1];
+    nombre_conductor.readOnly=true;
+    nombre_conductor.style.backgroundColor = '#d3d3d3';
+
+        if(r[1][2]!=null)/*Si hay teléfono*/
+        {
+            telefono_conductor.value=r[1][2];
+            telefono_conductor.readOnly=true;
+            telefono_conductor.style.backgroundColor = '#d3d3d3';
+        }
+        else
+        {
+          telefono_conductor.style.backgroundColor = '#F19C9C';  
+        }
+
+    cabecera_conductor.style.backgroundColor='#90D663';
+    }
+    else
+    {
+    cabecera_conductor.style.backgroundColor='red';
+    cabecera_conductor.style.color='white';
+    }
+
+    if (vehiculo_externo == 'externo') {
+        contenedor_ayudante.style.display = "none";
+
+    } else {
+        contenedor_ayudante.style.display = "block"; // o "inline" según corresponda
+    }
+
+    if(r[2]!=null) /*Datos del ayudante*/
+    {
+    dni_ayudante.value=r[2][0]; dni_ayudante.readOnly=true;
+    dni_ayudante.style.backgroundColor = '#d3d3d3';
+    nombre_ayudate.value=r[2][1]; nombre_ayudate.readOnly=true;
+    nombre_ayudate.style.backgroundColor = '#d3d3d3';
+
+        if(r[2][2]!=null)/*Si hay teléfono*/
+        {
+            telefono_ayudante.value=r[2][2];
+            telefono_ayudante.readOnly=true;
+            telefono_ayudante.style.backgroundColor = '#d3d3d3';
+        }
+        else
+        {
+          telefono_ayudante.style.backgroundColor = '#F19C9C';  
+        }
+
+    cabecera_ayudante.style.backgroundColor='#90D663';
+    } 
+    else
+    {
+    cabecera_ayudante.style.backgroundColor='red';
+    cabecera_ayudante.style.color='white';
+    }
+
+</script>
+
+</body>
+</html>

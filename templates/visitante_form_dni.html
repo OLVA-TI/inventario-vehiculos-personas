@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/1f8a9fa6da.js" crossorigin="anonymous"></script>
+    <title>Formulario de Registro de Visitante</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        #form_vehiculo {
+            width: 80%;
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="file"] {
+            width: calc(100% - 12px);
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        h2{
+            text-align: center;
+        }
+        .radio-container {
+            display: flex;
+            margin-bottom: 12px;
+        }
+
+        .radio-container label {
+            flex: 1;
+            margin-right: 5px;
+        }
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        .radio-button {
+            background-color: #C0BDBD;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="radio"]:checked + label .radio-button {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <form id="form_vehiculo" action="/validar_visitante" method="post" onsubmit="return validarFormulario()">
+        <h2>VISITANTE</h2>
+
+        <label>Tipo de registro <i class="fa-solid fa-arrow-right-arrow-left"></i> </label>
+        <div class="radio-container">
+            <input type="radio" id="entrada" name="tipo" value="1">
+            <label for="entrada"><div class="radio-button">Entrada</div></label>
+            <input type="radio" id="salida" name="tipo" value="0">
+            <label for="salida"><div class="radio-button">Salida</div></label>
+        </div>
+
+        <label for="dni">DNI <i class="fa-solid fa-barcode"></i></label>
+        <input type="text" name="dni" required>
+        <input type="submit" value="Registrar">
+        <br><br>
+        <a style="display: block; text-align: right;" href="/zona_registros">Volver al registro vehicular</a>
+    </form>
+
+<script>
+    function validarFormulario() {
+        var tipoEntrada = document.getElementById("entrada");
+        var tipoSalida = document.getElementById("salida");
+
+        if (!tipoEntrada.checked && !tipoSalida.checked) {
+            alert("Por favor seleccione si es una entrada o una salida.");
+            return false; // Evita que el formulario se envíe
+        }
+        return true; // Permite que el formulario se envíe si se ha seleccionado una opción
+    }
+</script>
+
+</body>
+</html>

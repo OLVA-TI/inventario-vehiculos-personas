@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación de Envío</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1em;
+            text-align: center;
+        }
+
+        p {
+            margin: 1em 0;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #328BEA;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        a:hover {
+            background-color: #487EEC;
+        }
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            max-width: 500px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+            
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        h3 {
+            margin-top: 40px;
+        }
+
+        img {
+            display: block;
+            margin: 20px auto;
+            max-width: 80%;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>REPORTE DE REGISTRO VEHICULAR</h1>
+    </header>
+    <br>
+    <div>
+        <a href="/zona_registros">Volver a la sección de registro</a>
+    </div>
+
+    <h3>Vehiculo</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Placa</th>
+                <th>Sede</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{report[0][0]|tojson}}</td>
+                <td>{{report[0][1]|tojson}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <img src="data:image/jpeg;base64,{{ foto_vehiculo_b64 }}" alt="Foto del Vehículo">
+
+    <h3>Conductor</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>DNI</th>
+                <th>Nombres</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{report[1][0]|tojson}}</td>
+                <td>{{report[1][1]|tojson}} </td><!-- {{report[1][2]|tojson}} -->
+            </tr>
+        </tbody>
+    </table>
+    <img src="data:image/jpeg;base64,{{foto_conductor_b64}}" alt="Foto del Conductor">
+    
+    <div id="div_ayudante">
+    <h3>Ayudante</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>DNI</th>
+                <th>Nombres</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{report[2][0]|tojson}}</td>
+                <td>{{report[2][1]|tojson}}</td> <!-- {{report[2][2]|tojson}} -->
+            </tr>
+        </tbody>
+    </table>
+    <img src="data:image/jpeg;base64,{{foto_ayudante_b64}}" alt="Foto del Ayudante">
+    </div>
+</body>
+
+<script>
+    var a='{{tipo_vehiculo}}';
+    tbl_ayudante=document.getElementById('div_ayudante');
+
+    if(a=='externo')
+    {
+        tbl_ayudante.style.display="None";
+    }
+</script>
+
+</html>

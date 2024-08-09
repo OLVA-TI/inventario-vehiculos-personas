@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <!-- JQUERY -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">  
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/1f8a9fa6da.js" crossorigin="anonymous"></script>
+    <link rel="icon" type="image/x-icon" href="static/logoolva.ico">
+   
+<style>
+        .boton {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        text-align: center;
+        text-decoration: none;
+        background-color: #4CAF50;
+        color: white;
+        border: 1px solid #4CAF50;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .boton:hover {
+        background-color: #45a049;
+        color: white;
+    }
+
+    /*CSS NAVEGACIÓN*/
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        nav {
+            background-color: #333;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between; /* Espacio entre los elementos */
+            align-items: center;
+        }
+
+        .icono {
+            width: 30px;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            display: flex;
+            align-items: center;
+        }
+
+        li {
+            margin-right: 20px;
+            padding: 10px;
+            transition: background-color 0.3s ease;
+            border-radius: 6px;
+        }
+
+        li:hover {
+            background-color: #3DAF22;
+            border-radius: 6px;
+        }
+
+        .cerrar-sesion {
+            margin-left: auto; /* Mueve el enlace "Cerrar Sesión" hacia la derecha */
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+            font-size: 16px;
+        }
+
+        a:hover {
+            text-decoration: none;
+        }
+
+        .contenido {
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h2{
+            text-align: center;
+            font-size: 36px;
+        }
+
+        h4{
+            text-align: center;
+            font-size: 20px;
+        }
+
+        /* Estilo para el fondo oscuro semi-transparente */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro semi-transparente */
+            z-index: 9999; /* Asegura que el fondo esté por encima de todo */
+        }
+
+        /* Estilos para el modal */
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            z-index: 10000; /* Asegura que el modal esté por encima del fondo */
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+
+        /*RELOJ*/
+        #clock {
+          font-family: Arial, sans-serif;
+          font-size: 1.5em;
+          text-align: center;
+        }
+
+</style>
+
+
+</head>
+<body>
+
+    <nav>
+        <img src="/static/logoolva.ico" alt="Ícono" class="icono">
+    <ul>
+        <li><a href="#">Contacto</a></li>
+        <li class="cerrar-sesion"><a href="/cerrar_sesion">Cerrar Sesión</a></li>
+    </ul>
+    </nav>
+
+<h2>REGISTRO DE VISITAS - OLVA COURIER</h2>
+<h4>Fecha y hora del sistema: <div id="clock"></div></h4>
+<div style="position: absolute; top: 0px; left: 0px; z-index: 1001;position: relative;">
+        <table border="1" class="table" id="table_map" >
+            <thead>
+                <tr>
+                    <th>DNI</th>
+                    <th>Nombre<i class="fa-solid fa-circle-user"></i></th>
+                    <th>Teléfono<i class="fa-solid fa-phone"></i></th>
+                    <th>Rol</th>
+
+                    <th>Tipo</th>
+                    <th>Área</th>
+
+                    <th>Motivo</th>
+                    <th>Autoriza<i class="fa-regular fa-circle-user"></i></th>
+                    <th>Empresa<i class="fa-solid fa-building"></i></th>
+                    <th>Fecha:Hora<i class="fa-regular fa-clock"></i></th>
+                    <th>Obervación</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for registro in ua[0] %}
+                    <tr>
+                        <td>{{ registro[0] }}</td>
+                        <td>{{ registro[1] }}</td>
+                        <td>{{ registro[2] }}</td>
+                        <td>{{ registro[3] }}</td>
+                        {% if registro[4] == 0 %}
+                            <td><i class="fa-solid fa-arrow-up" style="color: #ff0000;"></i></td>
+                        {% elif registro[4] == 1 %}
+                            <td><i class="fa-solid fa-arrow-down" style="color: #05f009;"></i></td>
+                        {% endif %}
+                        <td>{{ registro[5] }}</td>
+                        <td>{{ registro[6] }}</td>
+                        <td>{{ registro[7] }}</td>
+                        <td>{{ registro[8] }}</td>
+                        <td>{{ registro[9] }}</td>
+                        <td>{{ registro[10] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div id="myModal" class="modal">
+          <span class="close">&times;</span>
+          <img class="modal-content" id="modalImg">
+        </div>
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+    <script>
+    $(document).ready(function() {
+            $('#table_map').DataTable({
+        paging: false, // Ejemplo de configuración personalizada
+        info: false, // Oculta el texto "Showing x to y of z entries"
+        //scrollY: 400,
+        // Otras opciones personalizadas aquí
+        });
+
+        /*FOTO CONDUCTOR*/
+        $('#table_map tbody').on('click','td:nth-child(1)', function() {
+            var dni = $(this).text(); // Obtiene el id_sede de la celda clicada
+            
+            // Realizar una solicitud AJAX para obtener la imagen
+            $.ajax({
+                url: '/ver_foto_persona',
+                type: 'GET',
+                data: {dni: dni},
+                success: function(response) {
+                    // Una vez que se recibe la respuesta, establecer la imagen en el modal
+                    $('#modalImg').attr('src', 'data:image/jpeg;base64,' + response);
+                    $('#myModal').css('display', 'block');
+                },
+                error: function(xhr, status, error) {
+                    // Manejar errores si la solicitud falla
+                    console.error('Error al cargar la imagen:', error);
+                }
+            });
+        });
+
+        // Cuando se haga clic en el botón de cerrar, se cierra el modal
+        $('.close').on('click', function() {
+            $('#myModal').css('display', 'none');
+        });
+
+        // Cuando se haga clic fuera del modal, también se cerrará
+        $(window).on('click', function(event) {
+            if (event.target == $('#myModal')[0]) {
+                $('#myModal').css('display', 'none');
+            }
+        });
+    });
+    </script>
+
+
+<!-- Comunicación con el servidor -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
+<script>
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+    // Escucha el evento para recibir los nuevos datos del servidor
+    /*socket.on('nuevos_datos_tabla_{{sede}}', function(nuevosDatos) {*/ /*Si colocamos esto, los usuarios se van a las salas*/
+    socket.on('nuevos_datos_tabla_visitante', function(nuevosDatos) {
+        // Limpia el cuerpo de la tabla
+        $('#table_map tbody').empty();
+
+        // Itera sobre los nuevos datos y agrega cada fila a la tabla
+        $.each(nuevosDatos, function(index, fila) {
+            var nuevaFila = $('<tr>');
+            // Agrega las celdas de la fila con los datos correspondientes
+            nuevaFila.append($('<td>').html(fila.id_visitante));
+            nuevaFila.append($('<td>').html(fila.nombre));
+            nuevaFila.append($('<td>').html(fila.telefono));
+            nuevaFila.append($('<td>').html(fila.rol));
+            /*nuevaFila.append($('<td>').html(fila.tipo_registro));*/
+            if (fila.tipo == 0) {
+                nuevaFila.append($('<td>').html('<i class="fa-solid fa-arrow-up" style="color: #ff0000;"></i>'));
+            } else if (fila.tipo == 1) {
+                nuevaFila.append($('<td>').html('<i class="fa-solid fa-arrow-down" style="color: #05f009;"></i>'));
+            }
+            nuevaFila.append($('<td>').html(fila.area));
+            nuevaFila.append($('<td>').html(fila.motivo_visita));
+            nuevaFila.append($('<td>').html(fila.quien_autoriza));
+            nuevaFila.append($('<td>').html(fila.sede));
+            nuevaFila.append($('<td>').html(fila.observacion));
+            nuevaFila.append($('<td>').html(fila.fecha_registro));
+            // Agrega la nueva fila a la tabla
+            $('#table_map tbody').append(nuevaFila);
+        });
+
+    });
+</script> -->
+
+<script>
+function updateClock() {
+  var now = new Date();
+  var hours = now.getHours();
+  var minutes = now.getMinutes();
+  var seconds = now.getSeconds();
+
+  // Añade ceros delante si son necesarios
+  hours = hours < 10 ? "0" + hours : hours;
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+  seconds = seconds < 10 ? "0" + seconds : seconds;
+
+  var timeString = hours + ":" + minutes + ":" + seconds;
+
+  document.getElementById("clock").textContent = timeString;
+}
+
+// Actualiza el reloj cada segundo
+setInterval(updateClock, 1000);
+
+// Llama a la función para mostrar el reloj por primera vez
+updateClock();
+</script>
+
+
+
+</body>
+</html>

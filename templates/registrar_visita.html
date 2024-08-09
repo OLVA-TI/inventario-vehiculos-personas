@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Visita</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #form_vehiculo {
+            width: 80%;
+            max-width: 500px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 3px;
+            display: block;
+        }
+
+        input[type="text"],
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        img {
+            display: block;
+            margin: 0 auto;
+            border-radius: 50%;
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+        /*Ocultar y mostrar el TextArea*/
+        .radio-container {
+            display: flex;
+            margin-bottom: 12px;
+        }
+
+        .radio-container label {
+            flex: 1;
+            margin-right: 5px;
+        }
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        .radio-button {
+            background-color: #C0BDBD;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="radio"]:checked + label .radio-button {
+            background-color: #45a049;
+        }
+
+        .checkbox-container {
+            position: relative;
+            cursor: pointer;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .checkbox-container input {
+            display: none;
+        }
+
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 25px;
+            width: 25px;
+            background-color: #eee;
+            border-radius: 4px;
+        }
+
+        .checkbox-container input:checked ~ .checkmark {
+            background-color: #45a049;
+        }
+
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        .checkbox-container input:checked ~ .checkmark:after {
+            content: "\f00c";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            color: #fff;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #observacionContainer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+        }
+
+        #observacionContainer.active {
+            max-height: 1000px; /* Ajusta el valor según sea necesario */
+        }
+
+    </style>
+</head>
+<body>
+<form id="form_vehiculo" action="/registrar_visita_visitante" method="post" enctype="multipart/form-data">
+    <h2>REPORTE DE VISITA</h2>
+    
+    <img src="data:image/jpeg;base64,{{foto_personal_b64}}" alt="Foto del Visitante">
+    <div>
+        <label for="dni">DNI</label>
+        <span>{{datos_visita[0]}}</span>
+    </div>
+    <div>
+        <label for="nombre">Nombre</label>
+        <span>{{datos_visita[1]}}</span>
+    </div>
+    <div>
+        <label for="telefono">Teléfono</label>
+        <span>{{datos_visita[2]}}</span>
+    </div>
+    <div>
+        <label for="empresa">Empresa</label>
+        <span>{{detalles_visitante[1]}}</span>
+    </div>
+    <br>
+    <input type="hidden" name="dni" id="dni" value="{{dni}}">
+    <input type="hidden" name="tipo" id="tipo" value="{{tipo}}">
+
+    <div id="observacionContainer" class="inactive">
+        <label for="observacion">Observación <i class="fa-regular fa-comment"></i></label>
+        <textarea id="observacion" name="observacion" placeholder="Observación" rows="4" cols="35"></textarea>
+    </div>
+      <label class="checkbox-container">
+        <input type="checkbox" id="activarTextarea" onchange="toggleTextarea(this)">
+        <span class="checkmark"></span>
+    </label>
+    <br><br>
+
+    <label for="area">Área</label>
+    <input type="text" name="area" list="areaList" id="area" placeholder="Buscar..." oninput="updateDatalistArea(event)" required>
+    <datalist id="areaList">
+    </datalist>
+       
+    <label for="motivo_visita">Motivo de Visita</label>
+    <input type="text" name="motivo_visita" id="motivo_visita" required>
+
+    <label for="quien_autoriza">Quién Autoriza</label>
+    <input type="text" list="autorizaList" name="quien_autoriza" id="quien_autoriza" placeholder="Buscar..." oninput="updateDatalist(event)" required>
+    <datalist id="autorizaList">
+    </datalist>
+
+    <input type="submit" value="Registrar">
+</form>
+</body>
+
+<script>
+    function updateDatalistArea(event) {
+        let input = event.target;
+        let datalist = document.getElementById('areaList');
+        let inputValue = input.value.toLowerCase();
+        let options = datalist.getElementsByTagName('option');
+
+        // Ocultar todas las opciones
+        for (let option of options) {
+            option.hidden = true;
+        }
+
+        // Mostrar solo las opciones que coincidan con la entrada del usuario
+        for (let option of options) {
+            if (option.value.toLowerCase().startsWith(inputValue)) {
+                option.hidden = false;
+            }
+        }
+    }
+</script>
+
+<script>
+    // Lista de nombres de empresas
+    const nombreArea = ['ADMINISTRACIÓN Y FINANZAS','DESPACHOS','DISTRIBUCION','CROSSBORDER','GERENCIA GENERAL','GESTION HUMANA','LEGAL','MARKETING','OPERACIONES LIMA','OPERACIONES PROVINCIA','PROYECTOS INTERNACIONALES','SEGURIDAD Y PREVENCION DE RIESGOS','SERVICIO INTERPROVINCIAL','SERVICIO AL CLIENTE','TIENDA ALMACEN','TRANSFORMACION E INNOVACION','VENTAS',
+    ];
+    // Obtener el elemento datalist
+    const areaList = document.getElementById('areaList');
+    // Iterar sobre la lista de nombres de empresas y agregar opciones al datalist
+    nombreArea.forEach(nombre => {
+        const option = document.createElement('option');
+        option.value = nombre;
+        areaList.appendChild(option);
+    });
+</script>
+
+
+
+
+<script>
+    function updateDatalist(event) {
+        let input = event.target;
+        let datalist = document.getElementById('autorizaList');
+        let inputValue = input.value.toLowerCase();
+        let options = datalist.getElementsByTagName('option');
+
+        // Ocultar todas las opciones
+        for (let option of options) {
+            option.hidden = true;
+        }
+
+        // Mostrar solo las opciones que coincidan con la entrada del usuario
+        for (let option of options) {
+            if (option.value.toLowerCase().startsWith(inputValue)) {
+                option.hidden = false;
+            }
+        }
+    }
+</script>
+
+<script>
+    // Lista de nombres de empresas
+    const nombreAutorizante = ['SEGURIDAD','WALTER BARRETO','CARLOS ZAPATA','PABLO ROSAS','HECTOR DONAYRE','JOEL RAMIREZ','RAFAEL BARONA','RICARDO ELGUERA','PEDRO HURTADO','CHRISTIAN ARROYO','ITALO BASILE','JOE CARRASCO','ELUARD MENDOZA','ANDERSON VASQUEZ GRANDEZ','HECTOR DONAYE','SARA SAONA QUISPE','JOEE CARRASCO','JUAN CARLOS COLLACHAGUA','WALTER VELA','PILAR BUSTAMANTE','ANDREA GARCIA','JOSE COLLANTES','RICARDO GIL','GISELA GONZALES','HIPOLITO TAPIA','CYNTHIA ALACHE','ADRIAN CADENILLAS','DIANA CRUZ','DIANA CRUZ MORENO','MANUEL GUEVARA','RICARDO ELGUERA GIL','DAVID DE LOS SANTOS','PAULO MARQUEZ','MAGALY LOPEZ','HUMBERTO JARAMILLO','EDWIN ZUTA','EGURIDAD','RICHARD GARCIA','MLAGROS BELLO PURISACA','OSCAR ISASI CARRION','ALEJANDRO NAVARRO','GERCE HEREDIA','JUAN SAONA','EDUARDO RAMIREZ','SANTOS TORO','MERCEDES BUITRON','SANTOS TORO FARIAS','ENZO ACHING CORDOVA','RAFAEL LEON','FERNANDO CANCHO','EVELYN MENDIETA','JUAN ALVAREZ PUQUIO','JOSEPH CONDORI','PAULO MARQUEZ VELIT','WALTER BARRETO YNOÑAN','MICHELL AVALOS ROMERO','VERONICA PACHARI VEGA','ADRIAN CADENILLAS SANTOS','JOEL RAMIREZ MEZA','GISELA GONZALES RUIZ','RAFAEL BARONA QUISPE','PAOLA CARBAJAL NUÑEZ','RICARDO ELGUERA VALERO','PEDRO HURTADO GALINDO','ACHING CORDOVA','CHRISTIAN ARROYO MONTOYA','ANDREA GARCIA VILLAVICENCIO','WALTER VELA LOPEZ','JUAN CARLOS INGA','JULIO VASQUEZ','MARIELLA GALLARDO','JHON CALDERON','JOSE COLLANTES IRALA','MICHAEL AVALOS ROMERO','JOSEHP CONDORI','CARLOS ZAPATA ALEJANDRIA','FERNANDO CANCHO OSORES','VERONICA PACHARI','MANUEL GUEVARA DIAZ','HIPOLITO TAPIA CORONADO','ISCAR ISASI CARRION','JUAN CARLOS YNGA','MARIA ROSAPEREZ','PABLO ROSAS CACHO','ITALO BASILE MARALLANO','ALEJANDRO NAVARRO CRUZADO','HECTOR DONAYRE COQUIS','JENNY GRANDEZ','ARNALDO ALVARADO','JUAN SAONA QUISPE','DIEGO RUIZ','DIEGO MURAYAYI','SRA JENNY GRANDEZ','JENNY GRANDEZ DEL AGUILA','RIEGO RUIZ','ENRIQUE RUIZ','FERNANDO TIZON','ALEJANDO NAVARRO','ANDERSON VASQUEZ VELA','RENZO ACGING','JOSUE SOLIS','YIMY VERA RIVERA','JOIEL RAMIREZ','JOSE HINOJOSA','JOEL RANIREZ','YIYM VERA RIVERA','REYNALDO ELORRIAGA','JOEL RAMIEZ','PAMELA RETAMOZO','MICHELL AVALOS','RENZO ACHING','YIMI VERA','ALJEANDRO NAVARRO CRUZADO','ESTRELLA ARENAS DIAZ','LILIANA BARQUERO / ENFERMERA','JOSE SALDAÑA','JOEL MRAMIREZ','JOEE CARRASCO RIVERA','ALONSO CORDOVA','HECTOR DONAYRE / LOGISTICA','JOEL RAMIREZ / DESPACHO','JUAN COLLACHAGUA','FRANCISCO CARDENAS','GABRIEL RUIZ LOPEZ','LIC. LILIANA BARQUERO','LUBERLY','JOEL RAMREZ MEZA','JOEL RAMIEREZ','JOSEPH CONDORI ARDITTO','GORIA MORENO','ANDERSON VASQUE GRANDEZ','ANDREA GARCIA / RR HH','JESSICA VASQUE GRANDEZ','VALERIA DE LA CRUZ','HENRI TINOCO','HENRY TINOCO','GRACIELA INCA VILLANUEVA','PAMELA RETAMOZO BRENIS','HERNAN CABREJO','RRHH','LOGISTICA FEVEG','JOSUE SOLIS FERNANDEZ','CESAR VELARDE','FRANK YÑIGO TRELLES','JOEL RAMIREZ MRZA','LUIS HIDALGO','JEOL RAMIREZ','JESSICA VASQUEZ GRANDEZ','EVELYN PIÑAREZ SALINAS','JOEL RAMIREZ MEZA','ANDERSON JR.','JUAN CARLOS COLLACHUGUA','FERNANDO CANCHO','SANTOS TORO','JOEL RAMIREZ','PEDOR HURTADO GALINDO','JESSICA VASQUEZ','JOEL RAMAREZ','JEANPIERRE OLIVERA MANRIQUE','CAROL RUIZ','ARNALDO ALVARADO','JESSICA QUIJANO','PABLO ROSAS','HIPOLITO TAPIA','JOSSE CONDORI','OSWALDO CACERES / JOSE HINOJOSA','JOSEPN CONDORI','ANDERSON JR','ALNARDO ALVARADO','STEPHANY MONTENEGRO','EVELYN PIÑAREZ','YIMMY VERA','JESICA VASQUEZ','LILIANA BARQUERO DIAZ','FREDDY SERRANO','EVELYN PIÑAREZ SALINAS','HETOR DONAYRE COQUIS','CARLOS MORON','JUAN CAR,OS COLLACHAGUA','ALEJANDRA CAMPOS','JAUN CARLOS COLLACHAGUA','MADELEINE RODAS','JOSETH CONDORI','CESAR VELA','YIMY VERA','ANDREA GARCIA','MILAGROS VEGA','JOSE HINOJOSA','HERNAN CABREJOS','ALONSO SACHEZ( MKT )','SR ITALO BASILE','DESPACHO','SOPORTE / FERNANDO CANCHO','JUAN CARLOS COLLCHAGUA','SANTO TORRO','ANDERSON JR','JOSEP CONDORY','MARIELLA GALLARDO','ALEJANDRA CAMPOS','CARLOS CHUMPITAZ','LILIAN ABARQUERO DAIZ','HIPOLITO TAPIA','JACKY CHOLAN','SEGURIDD','CARLOS CHUMPITAS','ALONSO CORDOVA','CARLOS RAMIREZ','SANTOS TOTO FARIAS','CESAR VELA PEÑAFIEL','ALONSO CORDOVA BOADA','CESER VELARDE','HCTOR DONAYRE','SEGURIDAD','JIOEL RAMIREZ','MADELEINE RIODAS','JAIME CISNEROS ROJAS','LIILIANA BARQUERO DIAZ','ALAEJANDRO NAVARRO','URSULA AGUIRRE','MAGALY TRUJILLO','RAFAEL LEON SILVA','JESSICA VZSQUEZ','JESSICA VASQUEZ GRADNEZ','JOEL RAMIREAZ MEZA','EVELYI PIÑAREZ','EDWIN ZUTA MALDONADO','ARANALDO ALVARADO','CESAR VELARDE','HIPOLITO','PABLO ROSA','LILIANA ABRQUERO DIAZ','CESAR VELA','SARA SAONA','STEFANY MONTENEGRO','ALONSO SANCHEZ','STEFANY MONTENEGRO BENITES','MADELINE RODAS','ESTEFHANY MONTENEGRO','ALEJANDRA ARIAS RIVERA','EVELIN PIÑAREZ','ITALO VASILO','JOEL CARRASCO','LILIANA VAQUERO','CARLOS COLLACHAHUA','LILIANA BARQUERO DIAAZ','MADELEINE','TOPICO','JOEL RAMIRES MEZA','MALU GOMEZ VILLACORTA','SANTO TORO','JOEL REMIREZ','MAGLY TRUJILLO','HECTOR DONAYRE','JAVIER CHUMPITAZ','EVELYN PIÑAREZ MENDIETA','ALEJANDRO NAVADRO','ALEJANDRA ARIAS','JACKY CHOLAN / FERNADO CANCHO','PABLO ROSA','JOSUE SOLIS','DR HERNAN CABREJOS','JORL RAMIREZ','MADELY RODAS','CHAGUA MANDUJANO AXEL','HERTOR DONAYRE','RAFAEL LEON','CARLOS COLLACHAGUA','EVELYN PIÑARES','CESAR VELRADE','SANTO TOROS','FERNANDO CANCHO','KEVIN LEGUIA','JOLE RAMIREZ','BRUNO JULCA','BRUNO JULCA CAMACHO','JIMI VERA','CESAR VERLARDE','MADELINEY','CESAR VELARDE','JESSICA REYES CRUZ','AELJANDRO NAVARRO','ALJANDRO NAVARRO','ISMAEL ALARCON','ALFONSO SAN MARTIN','JUAN CARLOS INGA/OLVA TI','JOEL RAMRIEZ MEZA','MILAGROS VEGA','CARLOS COLLACHAHUA','MARIELA GALLARDO','YIMY VERA','ALIDA GIRALDO','ALONSO CORDOVA','STEFHANY MONTENEGRO','ENZO ACHIN','CESSAR VELARDE','JEEANPIERRE','ROSA CHICOMA','SEGURDIAD','ALLISON VENTO',
+    ];
+    // Obtener el elemento datalist
+    const autorizaList = document.getElementById('autorizaList');
+    // Iterar sobre la lista de nombres de empresas y agregar opciones al datalist
+    nombreAutorizante.forEach(nombre => {
+        const option = document.createElement('option');
+        option.value = nombre;
+        autorizaList.appendChild(option);
+    });
+</script>
+
+
+
+<script>
+        function toggleTextarea(checkbox) {
+        var textareaContainer = document.getElementById("observacionContainer");
+        if (checkbox.checked) {
+            textareaContainer.classList.add("active");
+            textareaContainer.classList.remove("inactive");
+        } else {
+            textareaContainer.classList.remove("active");
+            textareaContainer.classList.add("inactive");
+        }
+    }
+</script>
+
+
+</html>

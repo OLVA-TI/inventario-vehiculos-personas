@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Registro de Visitante</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        #form_vehiculo {
+            width: 80%;
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="file"] {
+            width: calc(100% - 12px);
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        h2{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <form id="form_vehiculo" action="/registrar_datos_visitante" method="post" enctype="multipart/form-data">
+        <h2>REGISTRAR VISITANTE</h2>
+        <label for="dni">DNI</label>
+        <input type="text" name="dni" value="{{dni}}" id="dni" required>
+        <label for="nombre_completo">Nombre Completo</label>
+        <input type="text" name="nombre_completo" id="nombre_completo" required>
+        <label for="telefono_visitante">Teléfono</label>
+        <input type="text" name="telefono_visitante" id="telefono_visitante" required>
+        <label for="nombre_empresa">Empresa</label>
+        <input type="text" name="nombre_empresa" id="nombre_empresa">
+        <label for="foto_visitante">Foto</label>
+        <input type="file" name="foto_visitante" id="foto_visitante" required accept="image/*">
+        <input style="display: none;" type="text" id="f_perso" name="f_perso" value="{{f_perso}}">
+        <input style="display: none;" type="text" id="ft" name="ft" value="{{ft}}">
+        <input style="display: none;" type="text" id="ya_con_foto" name="ya_con_foto" value="{{ya_con_foto}}">
+        <input type="submit" value="Registrar">
+    </form>
+
+
+<script>
+
+    dv={{datos_visita|tojson}}
+    de={{detalles_visitante|tojson}}
+    /*console.log(dv)*/
+    var dni=document.getElementById('dni');
+    var foto_visitante=document.getElementById('foto_visitante');
+    var nombre_completo=document.getElementById('nombre_completo');
+    var telefono_visitante=document.getElementById('telefono_visitante');
+    var nombre_empresa=document.getElementById('nombre_empresa');
+
+    if ({{f_perso}} == 0)
+    {
+        dni.readOnly=true;
+        dni.style.backgroundColor = '#d3d3d3';
+
+        foto_visitante.style.backgroundColor = "#EF8C8C"; 
+       
+
+        nombre_completo.value = dv[1];
+        nombre_completo.readOnly = true;
+        nombre_completo.style.backgroundColor = '#d3d3d3';
+
+        if(dv[2]!=null)
+        {
+            telefono_visitante.value=dv[2];
+            telefono_visitante.readOnly=true;
+            telefono_visitante.style.backgroundColor = '#d3d3d3';
+        }
+        else
+        {
+            telefono_visitante.style.backgroundColor = "#EF8C8C" /*Color rojo*/
+        }
+
+        nombre_empresa.value=de[1];
+        nombre_empresa.readOnly=true;
+        nombre_empresa.style.backgroundColor = '#d3d3d3';
+    }
+
+    if ({{ya_con_foto}} == 1)
+    {
+        if({{f_perso}} == 0)
+        {
+            foto_visitante.required=false;
+            foto_visitante.disabled=true;
+        }
+        
+    }
+
+
+</script>
+
+
+
+</body>
+</html>

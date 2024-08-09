@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <!-- JQUERY -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">  
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/1f8a9fa6da.js" crossorigin="anonymous"></script>
+    <link rel="icon" type="image/x-icon" href="static/logoolva.ico">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            /*background-color: #f4f4f4;*/
+            background-image: url("/static/carro.jpg");*/
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        form {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 300px;
+            margin-top: 0px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+        }
+
+        .radio-container {
+            display: flex;
+            margin-bottom: 12px;
+        }
+
+        .radio-container label {
+            flex: 1;
+            margin-right: 5px;
+        }
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        .radio-button {
+            background-color: #C0BDBD;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="radio"]:checked + label .radio-button {
+            background-color: #45a049;
+        }
+
+        .checkbox-container {
+            position: relative;
+            cursor: pointer;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .checkbox-container input {
+            display: none;
+        }
+
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 25px;
+            width: 25px;
+            background-color: #eee;
+            border-radius: 4px;
+        }
+
+        .checkbox-container input:checked ~ .checkmark {
+            background-color: #45a049;
+        }
+
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        .checkbox-container input:checked ~ .checkmark:after {
+            content: "\f00c";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            color: #fff;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        input[type="submit"] {
+            background-color: #45a049;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        #observacionContainer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+        }
+
+        #observacionContainer.active {
+            max-height: 1000px; /* Ajusta el valor según sea necesario */
+        }
+        h2{
+            text-align: center;
+
+        }
+        .boton {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        text-align: center;
+        text-decoration: none;
+        background-color: #4CAF50;
+        color: white;
+        border: 1px solid #4CAF50;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    /*CSS NAVEGACIÓN*/
+
+        nav {
+            background-color: #333;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between; /* Espacio entre los elementos */
+            align-items: center;
+            position: fixed; /* Fija la posición del menú */
+            width: 100%; /* Ocupa todo el ancho de la ventana */
+            top: 0; /* Coloca el menú en la parte superior */
+        }
+
+        .icono {
+            width: 30px;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            display: flex;
+            align-items: center;
+        }
+
+        li {
+            margin-right: 20px;
+            padding: 10px;
+            transition: background-color 0.3s ease;
+            border-radius: 6px;
+        }
+
+        li:hover {
+            background-color: #3DAF22;
+            border-radius: 6px;
+        }
+
+        .cerrar-sesion {
+            margin-left: auto; /* Mueve el enlace "Cerrar Sesión" hacia la derecha */
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+            font-size: 16px;
+        }
+
+        a:hover {
+            text-decoration: none;
+        }
+
+
+    </style>
+
+</head>
+<body>
+
+
+<nav>
+    <a href="/cerrar_sesion"><img src="/static/logoolva.ico" alt="Ícono" class="icono"></li>
+<ul>
+    <li><a href="/visitante_form">VISITA</a></li>
+</ul>
+</nav>
+
+
+<form id="registroForm" action="/form_registro" method="post" onsubmit="return validarFormulario()">
+    <h2>REGISTRO VEHICULAR {{sede}}</h1>
+    <label>Tipo de registro <i class="fa-solid fa-arrow-right-arrow-left"></i> </label>
+    
+    <div class="radio-container">
+        <input type="radio" id="entrada" name="tipo" value="1">
+        <label for="entrada"><div class="radio-button">Entrada</div></label>
+        <input type="radio" id="salida" name="tipo" value="0">
+        <label for="salida"><div class="radio-button">Salida</div></label>
+    </div>
+
+    <div id="observacionContainer" class="inactive">
+        <label for="observacion">Observación <i class="fa-regular fa-comment"></i></label>
+        <textarea id="observacion" name="observacion" placeholder="Observación" rows="4" cols="35"></textarea>
+    </div>
+
+    <label class="checkbox-container">
+        <input type="checkbox" id="activarTextarea" onchange="toggleTextarea(this)">
+        <span class="checkmark"></span>
+    </label>
+    <br><br>
+    <label for="vehiculo">Vehículo <i class="fa-solid fa-car"></i> </label>
+    <input type="text" name="vehiculo" required>
+
+    <label for="conductor">Conductor <i class="fa-solid fa-circle-user"></i> </label>
+    <input type="text" name="conductor" required>
+
+    <label for="ayudante">Ayudante <i class="fa-regular fa-circle-user"></i> </label>
+    <input type="text" name="ayudante" required>
+
+    <input type="submit" value="Registrar">
+</form>
+
+<script>
+    function validarFormulario() {
+        var tipoEntrada = document.getElementById("entrada");
+        var tipoSalida = document.getElementById("salida");
+
+        if (!tipoEntrada.checked && !tipoSalida.checked) {
+            alert("Por favor seleccione si es una entrada o una salida.");
+            return false; // Evita que el formulario se envíe
+        }
+        return true; // Permite que el formulario se envíe si se ha seleccionado una opción
+    }
+
+    function toggleTextarea(checkbox) {
+        var textareaContainer = document.getElementById("observacionContainer");
+        if (checkbox.checked) {
+            textareaContainer.classList.add("active");
+            textareaContainer.classList.remove("inactive");
+        } else {
+            textareaContainer.classList.remove("active");
+            textareaContainer.classList.add("inactive");
+        }
+    }
+</script>
+
+<script>
+    function limpiarFormulario() {
+        document.getElementById("registroForm").reset();
+    }
+</script>
+
+
+
+
+
+
+</body>
+</html>
